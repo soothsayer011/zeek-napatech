@@ -3,6 +3,6 @@ description = Packet source plugin that provides native support for NTAPI
 tags = packet source, plugin, napatech, ntapi
 depends =
     bro-pkg >=1.2
-    bro >=3.0.0
+    zeek >=3.2.1
 plugin_dir = build/Bro_Napatech.tgz
 build_command = (./configure --bro-dist=%(bro_dist)s && make)
