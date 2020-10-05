@@ -1,0 +1,30 @@
+
+cmake_minimum_required(VERSION 3.0)
+
+project(Plugin)
+
+include(ZeekPlugin)
+
+find_package(Napatech)
+
+if ( NAPATECH_FOUND )
+    include_directories(BEFORE ${NAPATECH_INCLUDE_DIR})
+    zeek_plugin_begin(Bro Napatech)
+    zeek_plugin_cc(src/Plugin.cc)
+    zeek_plugin_cc(src/Napatech.cc)
+    zeek_plugin_bif(src/Napatech.bif)
+    zeek_plugin_link_library(${NAPATECH_LIBRARY})
+    zeek_plugin_dist_files(zeekctl/Napatech.py)
+    zeek_plugin_end()
+    message(STATUS "Napatech prefix      : ${NAPATECH_ROOT_DIR}")
+else ()
+    message(FATAL_ERROR "Napatech library and/or headers not found.")
+endif ()
+
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/VERSION" VERSION LIMIT_COUNT 1)
+
+if ("${PROJECT_SOURCE_DIR}" STREQUAL "${CMAKE_SOURCE_DIR}")
+    # Allows building rpm/deb packages via "make package" in build dir.
+    include(ConfigurePackaging)
+    ConfigurePackaging(${VERSION})
+endif ()
